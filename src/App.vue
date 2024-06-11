@@ -1910,6 +1910,7 @@
               </button>
             </div>
           </div>
+
           <div class="row">
             <div class="col-12 col-sm-6 col-xxl-3 d-flex">
               <div class="card illustration flex-fill">
@@ -3102,41 +3103,19 @@
         </div>
       </main>
 
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="row text-muted">
-            <div class="col-6 text-start">
-              <ul class="list-inline">
-                <li class="list-inline-item">
-                  <a class="text-muted" href="#">Support</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="#">Help Center</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="#">Privacy</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="#">Terms of Service</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-6 text-end">
-              <p class="mb-0">
-                © 2024 - <a class="text-muted" href="/">AppStack</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <FooterComponent />
     </div>
   </div>
 </template>
 
 <script>
+import FooterComponent from "./components/layout/FooterComponent.vue";
+
 export default {
   name: "App",
-  components: {},
+  components: {
+    FooterComponent,
+  },
 };
 </script>
 
