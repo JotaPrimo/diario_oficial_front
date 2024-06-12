@@ -55,8 +55,8 @@
                                             <li class="sidebar-item">
                                                 <router-link class="sidebar-link" to="/login">Login</router-link>
                                             </li>
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link" href="/dashboard-saas">SaaS</a>
+                                            <li class="sidebar-item">                                              
+                                                <router-link class="sidebar-link" to="/usuarios/list">Usuários</router-link>
                                             </li>
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link" href="/dashboard-social">Social</a>

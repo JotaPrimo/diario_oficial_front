@@ -3,9 +3,9 @@
 		<div class="auth-form p-3">
 
 			<div class="text-center">
-				<h1 class="h2">Welcome back!</h1>
+				<h1 class="h2">Diário Oficial</h1>
 				<p class="lead">
-					Sign in to your account to continue
+					Faça login em sua conta para continuar
 				</p>
 			</div>
 
@@ -53,7 +53,7 @@ export default {
 	data() {
 		return {
 			username: 'caleb_romeo',
-			password: '12345678'
+			password: '12345678',
 		};
 	},
 	methods: {
@@ -65,11 +65,15 @@ export default {
 				});
 
 				localStorage.setItem('accessToken', token);
-				console.log(token);
+				this.$router.push({name: 'Home'})
 			} catch (error) {
 				messageService.error("Credenciais inválidas")
 				console.log(error);
 			}
+		},
+		async clearForm() {
+			this.username = '',
+			this.password = ''
 		}
 	}
 };
