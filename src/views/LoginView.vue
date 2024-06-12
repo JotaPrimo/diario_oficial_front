@@ -13,12 +13,12 @@
 				<form @submit.prevent="handleLogin">
 					<div class="mb-3">
 						<label class="form-label">Username</label>
-						<input class="form-control form-control-lg" type="text" name="email"
+						<input class="form-control form-control-lg" v-model="username" type="text" name="email"
 							placeholder="Enter your email">
 					</div>
 					<div class="mb-3">
 						<label class="form-label">Password</label>
-						<input class="form-control form-control-lg" type="password" name="password"
+						<input class="form-control form-control-lg" v-model="password" type="password" name="password"
 							placeholder="Enter your password">
 						<small>
 							<a href="/auth-reset-password">Forgot password?</a>
@@ -46,13 +46,14 @@
 
 <script>
 import authService from '@/services/authService.js'
+import messageService from '@/services/messageService';
 
 export default {
 	name: "LoginView",
 	data() {
 		return {
-			username: '',
-			password: ''
+			username: 'caleb_romeo',
+			password: '12345678'
 		};
 	},
 	methods: {
@@ -63,8 +64,10 @@ export default {
 					password: this.password,
 				});
 
+				localStorage.setItem('accessToken', token);
 				console.log(token);
 			} catch (error) {
+				messageService.error("Credenciais inválidas")
 				console.log(error);
 			}
 		}
