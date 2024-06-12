@@ -49,11 +49,11 @@
                                         </a>
                                         <ul id="dashboards" class="sidebar-dropdown list-unstyled collapse show"
                                             data-bs-parent="#sidebar">
-                                            <li class="sidebar-item active">
-                                                <a class="sidebar-link" href="/dashboard-default">Default</a>
+                                            <li class="sidebar-item active">                                                
+                                                <router-link class="sidebar-link" to="/">Home</router-link>
                                             </li>
                                             <li class="sidebar-item">
-                                                <a class="sidebar-link" href="/dashboard-analytics">Analytics</a>
+                                                <router-link class="sidebar-link" to="/login">Login</router-link>
                                             </li>
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link" href="/dashboard-saas">SaaS</a>
@@ -708,7 +708,7 @@
             "></div>
             </div>
         </div>
-    </nav>
+    </nav>   
 </template>
 
 <script>

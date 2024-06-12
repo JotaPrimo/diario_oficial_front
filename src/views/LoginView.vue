@@ -9,11 +9,11 @@
 				</p>
 			</div>
 
-			<div class="mb-3">			
-				<form>
+			<div class="mb-3">
+				<form @submit.prevent="handleLogin">
 					<div class="mb-3">
-						<label class="form-label">Email</label>
-						<input class="form-control form-control-lg" type="email" name="email"
+						<label class="form-label">Username</label>
+						<input class="form-control form-control-lg" type="text" name="email"
 							placeholder="Enter your email">
 					</div>
 					<div class="mb-3">
@@ -32,7 +32,7 @@
 						</div>
 					</div>
 					<div class="d-grid gap-2 mt-3">
-						<a class="btn btn-lg btn-primary" href="/dashboard-default">Sign in</a>
+						<button class="btn btn-lg btn-primary" type="submit">Entrar</button>
 					</div>
 				</form>
 			</div>
@@ -45,7 +45,29 @@
 </template>
 
 <script>
+import authService from '@/services/authService.js'
+
 export default {
-	name: "LoginComponent",
+	name: "LoginView",
+	data() {
+		return {
+			username: '',
+			password: ''
+		};
+	},
+	methods: {
+		async handleLogin() {
+			try {
+				const token = await authService.login({
+					username: this.username,
+					password: this.password,
+				});
+
+				console.log(token);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}
 };
 </script>
