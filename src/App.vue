@@ -21,6 +21,11 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                     data-lucide="calendar" class="lucide lucide-calendar align-middle mt-n1">
+                <a class="btn btn-light bg-white shadow-sm dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                  data-bs-display="static">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    data-lucide="calendar" class="lucide lucide-calendar align-middle mt-n1">
                     <path d="M8 2v4"></path>
                     <path d="M16 2v4"></path>
                     <rect width="18" height="18" x="3" y="4" rx="2"></rect>
@@ -51,7 +56,12 @@
                   stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                   data-lucide="refresh-cw" class="lucide lucide-refresh-cw align-middle">
                   <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  data-lucide="refresh-cw" class="lucide lucide-refresh-cw align-middle">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
                   <path d="M21 3v5h-5"></path>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
                   <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
                   <path d="M8 16H3v5"></path>
                 </svg>
@@ -71,6 +81,8 @@
                       </div>
                     </div>
                     <div class="col-6 align-self-end text-end">
+                      <img src="img/illustrations/customer-support.png" alt="Customer Support"
+                        class="img-fluid illustration-img" />
                       <img src="img/illustrations/customer-support.png" alt="Customer Support"
                         class="img-fluid illustration-img" />
                     </div>
@@ -97,7 +109,11 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                           data-lucide="dollar-sign" class="lucide lucide-dollar-sign align-middle text-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          data-lucide="dollar-sign" class="lucide lucide-dollar-sign align-middle text-success">
                           <line x1="12" x2="12" y1="2" y2="22"></line>
+                          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                         </svg>
                       </div>
@@ -122,6 +138,10 @@
                     </div>
                     <div class="d-inline-block ms-3">
                       <div class="stat">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          data-lucide="shopping-bag" class="lucide lucide-shopping-bag align-middle text-danger">
+                          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                           data-lucide="shopping-bag" class="lucide lucide-shopping-bag align-middle text-danger">
@@ -154,7 +174,11 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                           data-lucide="dollar-sign" class="lucide lucide-dollar-sign align-middle text-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          data-lucide="dollar-sign" class="lucide lucide-dollar-sign align-middle text-info">
                           <line x1="12" x2="12" y1="2" y2="22"></line>
+                          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                         </svg>
                       </div>
@@ -174,6 +198,7 @@
 </template>
 
 <script>
+import messageService from "./services/messageService.js";
 import FooterComponent from "./components/layout/FooterComponent.vue";
 import SidebarComponent from "./components/layout/SidebarComponent.vue";
 import NavbarComponent from "./components/layout/NavbarComponent.vue";
@@ -185,6 +210,11 @@ export default {
     NavbarComponent,
     SidebarComponent,
   },
+  methods: {
+    showAlert() {
+      messageService.success("Operação realizada com sucesso");
+    }
+  }
 };
 </script>
 
