@@ -1,4 +1,5 @@
 import UsuariosList from "@/views/usuarios/UsuariosList.vue";
+import UsuariosCreate from "@/views/usuarios/UsuariosCreate.vue";
 
 export default [
   {
@@ -6,5 +7,10 @@ export default [
     name: "UsuariosList",
     component: UsuariosList,
   },
+  {
+    path: "/usuarios/create",
+    name: "UsuariosCreate",
+    component: UsuariosCreate,
+  }
 ];
 
