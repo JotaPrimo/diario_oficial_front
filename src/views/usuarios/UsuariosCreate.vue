@@ -25,6 +25,7 @@
                     <input
                       type="text"
                       class="form-control"
+                      autocomplete="new-username"
                       v-model="usuario.username"
                       id="username"
                       placeholder="Username"
@@ -83,7 +84,7 @@
                     <input
                       type="email"
                       class="form-control"
-                      v-model="email"
+                      v-model="usuario.email"
                       id="email"
                       placeholder="Email"
                       @blur="v$.usuario.email.$touch"
@@ -148,19 +149,39 @@
 
                   <div class="mb-3 col com-sm-12 com-sm-12">
                     <label class="form-label" for="role">Role</label>
-                    <select id="role" class="form-control" v-model="role">
+                    <select
+                      id="role"
+                      class="form-control"
+                      v-model="usuario.role"
+                      @blur="v$.usuario.role.$touch"
+                      :class="{
+                        'is-invalid':
+                          (v$.usuario.role.$dirty && v$.usuario.role.$error) ||
+                          erros.role,
+                        'is-valid':
+                          v$.usuario.role.$dirty && !v$.usuario.role.$error,
+                      }"
+                    >
                       <option selected="" disabled>Selecione...</option>
-                      <option value="ROLE_ADMIN">ROLE_ADMIN</option>
-                      <option value="ROLE_COLABORADOR">ROLE_COLABORADOR</option>
-                      <option value="ROLE_CLIENTE_ADMIN">
-                        ROLE_CLIENTE_ADMIN
-                      </option>
-                      <option value="ROLEROLE_CLIENTE_COLABORADORADMIN">
-                        ROLE_CLIENTE_COLABORADOR
-                      </option>
+                      <option
+                        :value="role"
+                        v-for="(role, index) in roles"
+                        :key="index"
+                      >
+                        {{ role }}
+                      </option>                     
                     </select>
-                    <div v-if="v$.usuario.role.$error">
-                      Role field has an error.
+                    <div class="text-danger" v-if="this.erros.role">
+                      {{ erros.role }}
+                    </div>
+                    <div
+                      class="valid-feedback"
+                      v-if="
+                        v$.usuario.role.$dirty &&
+                        !v$.usuario.role.$error
+                      "
+                    >
+                      Parece bom.
                     </div>
                   </div>
 
@@ -170,8 +191,9 @@
                     >
                     <input
                       type="password"
+                      autocomplete="new-password"
                       class="form-control"
-                      v-model="password"
+                      v-model="usuario.password"
                       id="inputPassword4"
                       placeholder="Password"
                     />
@@ -191,8 +213,9 @@
 </template>
 
 <script>
-// import messageService from '@/services/messageService';
+import messageService from "@/services/messageService";
 import usuarioService from "@/services/usuarioService";
+import roleService from "@/services/roleService";
 
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
@@ -211,6 +234,7 @@ export default {
         email: "",
         role: "",
       },
+      roles: [],
       erros: [],
       tituloPagina: "Cadastrar novo usuário",
       descricaoPagina: "Preencha todos os dados corretamente",
@@ -241,21 +265,20 @@ export default {
     };
   },
 
+  created() {
+    this.getAllRoles();
+  },
+
   methods: {
     store() {
-      console.log(this.usuario);
       usuarioService
         .store(this.usuario)
-        .then((res) => {
-          console.log("aqui then");
-          console.log(res);
-          // messageService.success("Usuário cadastrado com sucesso")
+        .then(() => {
+          messageService.success("Usuário cadastrado com sucesso");
         })
         .catch((err) => {
           this.erros = err.errors;
-          console.log("aqqui");
-          console.log(this.erros.email);
-          // messageService.error("Ocorreu um erro")
+          messageService.error("Ocorreu um erro");
         });
     },
 
@@ -265,6 +288,21 @@ export default {
       this.usuario.password = "";
       this.usuario.email = "";
       this.usuario.role = "";
+    },
+
+    getAllRoles() {
+      roleService
+        .getAllRoles()
+        .then((res) => {
+          console.log("listagem de roles");
+          console.log(res);
+          this.roles = res;
+        })
+        .catch((err) => {
+          console.log("errro");
+          console.log(err);
+          messageService.error("Erro ao carregar listagem de roles");
+        });
     },
   },
 };

@@ -23,12 +23,8 @@ const usuarioService = {
   store(usuario) {
     const token = localStorage.getItem('accessToken');
 
-
-    console.log("token");
-    console.log(token);
-
-    console.log("usuaos");
-    console.log(usuario)
+    console.log("USUARIO EM STORE");
+    console.log(usuario);
 
     return fetch('http://localhost:8082/api/v1/usuarios', {
       method: 'POST',
