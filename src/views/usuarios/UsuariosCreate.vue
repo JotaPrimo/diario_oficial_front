@@ -63,15 +63,20 @@
 										<input type="email" class="form-control" v-model="email" id="email"
 											placeholder="Email" @blur="v$.usuario.email.$touch" :class="{
 												'is-invalid':
-													v$.usuario.email.$dirty && v$.usuario.email.$error,
+													erros.email,
 												'is-valid':
 													v$.usuario.email.$dirty && !v$.usuario.email.$error,
 											}" />
-										<span class="text-danger" v-if="this.erros.email"> Erro do server</span>
 										
+										
+										<span class="text-danger" v-if="this.erros.email">
+											TEXT DANGER {{ this.erros.email }}
+										</span>
+
 										<div class="invalid-feedback" v-if="this.erros.email">
-											
+											invalid-feedback Email ERRO FROM SERVER
 										</div>
+										
 										<div class="invalid-feedback" v-if="
 											v$.usuario.email.$dirty && v$.email.required.$invalid
 										">
@@ -200,7 +205,7 @@ export default {
 				.catch((err) => {
 					
 					this.erros = err.errors;
-					
+					console.log("aqqui");
 					console.log(this.erros.email);
 					// messageService.error("Ocorreu um erro")
 				});
