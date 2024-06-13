@@ -67,7 +67,11 @@
 												'is-valid':
 													v$.usuario.email.$dirty && !v$.usuario.email.$error,
 											}" />
-
+										<span class="text-danger" v-if="this.erros.email"> Erro do server</span>
+										
+										<div class="invalid-feedback" v-if="this.erros.email">
+											
+										</div>
 										<div class="invalid-feedback" v-if="
 											v$.usuario.email.$dirty && v$.email.required.$invalid
 										">
@@ -194,9 +198,10 @@ export default {
 					// messageService.success("Usuário cadastrado com sucesso")
 				})
 				.catch((err) => {
-					console.log("aqui err");
-					console.log(err.errors);
+					
 					this.erros = err.errors;
+					
+					console.log(this.erros.email);
 					// messageService.error("Ocorreu um erro")
 				});
 		},
