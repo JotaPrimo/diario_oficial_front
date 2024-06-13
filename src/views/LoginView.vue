@@ -52,7 +52,7 @@ export default {
 	name: "LoginView",
 	data() {
 		return {
-			username: 'caleb_romeo',
+			username: 'jota_santos',
 			password: '12345678',
 		};
 	},

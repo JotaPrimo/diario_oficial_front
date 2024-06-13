@@ -11,7 +11,7 @@
         </ul>
         <div class="card">
           <div class="card-header">
-            <h5 class="card-title">{{ tituloPagina }}</h5>
+            <h5 class="card-title">{{ tituloPagina }} {{ usuario.username }}</h5>
             <h6 class="card-subtitle text-muted">
               {{ descricaoPagina }}
             </h6>
@@ -184,23 +184,6 @@
                       Parece bom.
                     </div>
                   </div>
-
-                  <div class="mb-3 col com-sm-12 com-sm-12">
-                    <label class="form-label" for="inputPassword4"
-                      >Password</label
-                    >
-                    <input
-                      type="password"
-                      autocomplete="new-password"
-                      class="form-control"
-                      v-model="usuario.password"
-                      id="inputPassword4"
-                      placeholder="Password"
-                    />
-                    <div v-if="v$.usuario.password.$error">
-                      Password field has an error.
-                    </div>
-                  </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Salvar</button>
               </form>
@@ -221,13 +204,14 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, maxLength } from "@vuelidate/validators";
 
 export default {
-  name: "UsuariosCreate",
+  name: "UsuariosEdit",
   components: {},
   setup() {
     return { v$: useVuelidate() };
   },
   data() {
     return {
+      id: this.$route.params.id,
       usuario: {
         username: "",
         password: "",
@@ -236,7 +220,7 @@ export default {
       },
       roles: [],
       erros: [],
-      tituloPagina: "Cadastrar novo usuário",
+      tituloPagina: "Editar usuário",
       descricaoPagina: "Preencha todos os dados corretamente",
     };
   },
@@ -267,12 +251,24 @@ export default {
 
   created() {
     this.getAllRoles();
+    this.findById(this.id);
   },
 
   methods: {
-    store() {
+    findById(idUsuario) {
       usuarioService
-        .store(this.usuario)
+        .findById(idUsuario)
+        .then((res) => {          
+          this.usuario = res;          
+      }).catch((err) => {
+        console.log(err);
+        messageService.error("Não foi possível encontrar o usuário")
+      })
+    },   
+    
+    update() {
+      usuarioService
+        .update(this.usuario)
         .then(() => {
           messageService.success("Usuário cadastrado com sucesso");
         })
@@ -282,8 +278,7 @@ export default {
         });
     },
 
-    clearForm() {
-      console.log("limpar form");
+    clearForm() {      
       this.usuario.username = "";
       this.usuario.password = "";
       this.usuario.email = "";
@@ -293,13 +288,14 @@ export default {
     getAllRoles() {
       roleService
         .getAllRoles()
-        .then((res) => {         
+        .then((res) => {          
           this.roles = res;
         })
         .catch(() => {          
           messageService.error("Erro ao carregar listagem de roles");
         });
-    },
+    }, 
+
   },
 };
 </script>
