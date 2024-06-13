@@ -21,17 +21,29 @@ const usuarioService = {
   },
 
   store(usuario) {
+    const token = localStorage.getItem('accessToken');
+
+
+    console.log("token");
+    console.log(token);
+
+    console.log("usuaos");
+    console.log(usuario)
+
     return fetch('http://localhost:8082/api/v1/usuarios', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(usuario)
-    }).then(res => {
-      return res;
-    }).catch(() => {
-      throw new Error('Erro ao tentar cadastrar usuário');
+    }).then(response => {
+      if (!response.ok) {
+        return response.json().then(err => {
+          return Promise.reject(err);
+        });
+      }
+      return response.json();
     })
   },
 
