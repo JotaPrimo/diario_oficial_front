@@ -22,58 +22,38 @@
                 <div class="row">
                   <div class="mb-3 col com-sm-12 com-sm-12">
                     <label class="form-label" for="username">Username</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      autocomplete="new-username"
-                      v-model="usuario.username"
-                      id="username"
-                      placeholder="Username"
-                      @blur="v$.usuario.username.$touch"
-                      :class="{
+                    <input type="text" class="form-control" autocomplete="new-username" v-model="usuario.username"
+                      id="username" placeholder="Username" @blur="v$.usuario.username.$touch" :class="{
                         'is-invalid':
                           v$.usuario.username.$dirty &&
                           v$.usuario.username.$error,
                         'is-valid':
                           v$.usuario.username.$dirty &&
                           !v$.usuario.username.$error,
-                      }"
-                    />
+                      }" />
 
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.username.$dirty &&
-                        v$.usuario.username.required.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.username.$dirty &&
+                      v$.usuario.username.required.$invalid
+                    ">
                       Username é um campo obrigatório.
                     </div>
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.username.$dirty &&
-                        v$.usuario.username.minLength.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.username.$dirty &&
+                      v$.usuario.username.minLength.$invalid
+                    ">
                       Mínimo de 5 caracteres
                     </div>
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.username.$dirty &&
-                        v$.usuario.username.maxLength.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.username.$dirty &&
+                      v$.usuario.username.maxLength.$invalid
+                    ">
                       Máximo de 50 caracteres.
                     </div>
-                    <div
-                      class="valid-feedback"
-                      v-if="
-                        v$.usuario.username.$dirty &&
-                        !v$.usuario.username.$error
-                      "
-                    >
+                    <div class="valid-feedback" v-if="
+                      v$.usuario.username.$dirty &&
+                      !v$.usuario.username.$error
+                    ">
                       Parece bom.
                     </div>
                   </div>
@@ -81,128 +61,85 @@
                   <div class="mb-3 col com-sm-12 com-sm-12">
                     <label class="form-label" for="email">Email</label>
                     {{ erros.email }}
-                    <input
-                      type="email"
-                      class="form-control"
-                      v-model="usuario.email"
-                      id="email"
-                      placeholder="Email"
-                      @blur="v$.usuario.email.$touch"
-                      :class="{
+                    <input type="email" class="form-control" v-model="usuario.email" id="email" placeholder="Email"
+                      @blur="v$.usuario.email.$touch" :class="{
                         'is-invalid':
                           (v$.usuario.email.$dirty &&
                             v$.usuario.email.$error) ||
                           erros.email,
                         'is-valid':
                           v$.usuario.email.$dirty && !v$.usuario.email.$error,
-                      }"
-                    />
+                      }" />
 
                     <div class="text-danger" v-if="this.erros.email">
                       {{ erros.email }}
                     </div>
 
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.email.$dirty &&
-                        v$.usuario.email.required.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.email.$dirty &&
+                      v$.usuario.email.required.$invalid
+                    ">
                       Email é um campo obrigatório.
                     </div>
 
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.email.$dirty && v$.usuario.email.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.email.$dirty && v$.usuario.email.$invalid
+                    ">
                       Email deve ser válido.
                     </div>
 
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.email.$dirty &&
-                        v$.usuario.email.minLength.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.email.$dirty &&
+                      v$.usuario.email.minLength.$invalid
+                    ">
                       Mínimo de 5 caracteres
                     </div>
-                    <div
-                      class="invalid-feedback"
-                      v-if="
-                        v$.usuario.email.$dirty &&
-                        v$.usuario.email.maxLength.$invalid
-                      "
-                    >
+                    <div class="invalid-feedback" v-if="
+                      v$.usuario.email.$dirty &&
+                      v$.usuario.email.maxLength.$invalid
+                    ">
                       Máximo de 50 caracteres.
                     </div>
-                    <div
-                      class="valid-feedback"
-                      v-if="v$.usuario.email.$dirty && !v$.usuario.email.$error"
-                    >
+                    <div class="valid-feedback" v-if="v$.usuario.email.$dirty && !v$.usuario.email.$error">
                       Parece bom.
                     </div>
                   </div>
 
                   <div class="mb-3 col com-sm-12 com-sm-12">
                     <label class="form-label" for="role">Role</label>
-                    <select
-                      id="role"
-                      class="form-control"
-                      v-model="usuario.role"
-                      @blur="v$.usuario.role.$touch"
-                      :class="{
-                        'is-invalid':
-                          (v$.usuario.role.$dirty && v$.usuario.role.$error) ||
-                          erros.role,
-                        'is-valid':
-                          v$.usuario.role.$dirty && !v$.usuario.role.$error,
-                      }"
-                    >
+                    <select id="role" class="form-control" v-model="usuario.role" @blur="v$.usuario.role.$touch" :class="{
+                      'is-invalid':
+                        (v$.usuario.role.$dirty && v$.usuario.role.$error) ||
+                        erros.role,
+                      'is-valid':
+                        v$.usuario.role.$dirty && !v$.usuario.role.$error,
+                    }">
                       <option selected="" disabled>Selecione...</option>
-                      <option
-                        :value="role"
-                        v-for="(role, index) in roles"
-                        :key="index"
-                      >
+                      <option :value="role" v-for="(role, index) in roles" :key="index">
                         {{ role }}
-                      </option>                     
+                      </option>
                     </select>
                     <div class="text-danger" v-if="this.erros.role">
                       {{ erros.role }}
                     </div>
-                    <div
-                      class="valid-feedback"
-                      v-if="
-                        v$.usuario.role.$dirty &&
-                        !v$.usuario.role.$error
-                      "
-                    >
+                    <div class="valid-feedback" v-if="
+                      v$.usuario.role.$dirty &&
+                      !v$.usuario.role.$error
+                    ">
                       Parece bom.
                     </div>
                   </div>
 
                   <div class="mb-3 col com-sm-12 com-sm-12">
-                    <label class="form-label" for="inputPassword4"
-                      >Password</label
-                    >
-                    <input
-                      type="password"
-                      autocomplete="new-password"
-                      class="form-control"
-                      v-model="usuario.password"
-                      id="inputPassword4"
-                      placeholder="Password"
-                    />
+                    <label class="form-label" for="inputPassword4">Password</label>
+                    <input type="password" autocomplete="new-password" class="form-control" v-model="usuario.password"
+                      id="inputPassword4" placeholder="Password" />
                     <div v-if="v$.usuario.password.$error">
                       Password field has an error.
                     </div>
                   </div>
-                </div>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>               
+                <button type="submit" v-if="errorsIsEmpty && !v$.$invalid" class="btn btn-primary">Salvar</button>
               </form>
             </div>
           </div>
@@ -277,8 +214,11 @@ export default {
           messageService.success("Usuário cadastrado com sucesso");
         })
         .catch((err) => {
-          this.erros = err.errors;
-          messageService.error("Ocorreu um erro");
+          if (err.errors) {
+            this.erros = err.errors
+          }
+
+          messageService.error(err.message);
         });
     },
 
@@ -293,13 +233,17 @@ export default {
     getAllRoles() {
       roleService
         .getAllRoles()
-        .then((res) => {         
+        .then((res) => {
           this.roles = res;
         })
-        .catch(() => {          
+        .catch(() => {
           messageService.error("Erro ao carregar listagem de roles");
         });
     },
+
+    errorsIsEmpty() {
+      return this.erros.length == 0
+    }
   },
 };
 </script>

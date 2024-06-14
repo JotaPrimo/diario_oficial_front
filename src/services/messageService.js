@@ -45,15 +45,15 @@ const messageService = {
     });
   },
 
-  confirm() {
+  confirm(message = "Você não poderá reverter isso !", title = "Tem certeza ?") {
     return Swal.fire({
-      title: "Tem certeza ?",
-      text: "Você não poderá reverter isso !",
+      title: title,
+      text: message,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Sim, deletar!",
+      confirmButtonText: "Confirmar",
       cancelButtonText: "Cancelar"
     });
   }

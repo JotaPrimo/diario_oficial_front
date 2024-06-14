@@ -3,11 +3,17 @@ import TrashIcon from "@/components/common/icons/TrashIcon.vue";
 import EyeIcon from "@/components/common/icons/EyeIcon.vue";
 import EyeOffIcon from "@/components/common/icons/EyeOffIcon.vue";
 import NewUserIcon from "@/components/common/icons/NewUserIcon.vue";
+import LockIcon from "@/components/common/icons/LockIcon.vue";
+import UnlockIcon from "@/components/common/icons/UnlockIcon.vue";
+import UserXIcon from "@/components/common/icons/UserXIcon.vue";
 
-export {
-    EditIcon,
-    TrashIcon,
+export {    
     EyeOffIcon,
     EyeIcon,
-    NewUserIcon
+    EditIcon,
+    LockIcon,
+    NewUserIcon,
+    UnlockIcon,
+    UserXIcon,
+    TrashIcon,
 }
