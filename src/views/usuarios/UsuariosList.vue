@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-12 col-xl-12">
+      <div v-if="loading" class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+      <div v-else class="col-12 col-xl-12">
         <UsuarioSearch @search="applyFilters" />
 
         <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
@@ -12,15 +18,29 @@
               {{ tituloPagina }}
               {{ pagination }}
               <select v-model="pagination.pageSize" @change="fetchUsuarios()">
-                  <option value="10" selected>10</option>
-                  <option value="20" selected>20</option>
-                  <option value="50" selected>50</option>
-                  <option value="100" selected>100</option>
-                </select>
+                <option value="10" selected>10</option>
+                <option value="20" selected>20</option>
+                <option value="50" selected>50</option>
+                <option value="100" selected>100</option>
+              </select>
             </h5>
-            <h6 class="card-subtitle text-muted">
-              {{ descricaoPagina }}
-            </h6>
+            <div>
+              <h6 class="card-subtitle text-muted">
+                {{ descricaoPagina }}
+              </h6>
+              <div id="infos_datatable">
+                
+                <div>
+                  <label for="totalRegistros" class="pt-2">
+                  Registro encontrados
+                  <span id="totalRegistros" class="badge text-bg-success fw-bold"> 
+                    {{ pagination.totalElements }}
+                  </span>
+                </label>
+                </div>
+                
+              </div>
+            </div>
           </div>
           <table class="table table-bordered">
             <thead>
@@ -126,6 +146,7 @@ export default {
       hasSearched: false,
       tituloPagina: "Usuários",
       descricaoPagina: "Recurso para gerênciamento de usuários",
+      loading: true,
       pagination: {
         pageNumber: 0,
         pageSize: 10,
@@ -175,10 +196,8 @@ export default {
   },
 
   methods: {
-    fetchUsuarios(page = 0) {
-      console.log("fetchUsuarios page");
-      console.log(page);
-
+    fetchUsuarios(page = 0) {    
+      this.loading = true;
       usuarioService
         .getAll(page, this.pagination.pageSize)
         .then((res) => {
@@ -194,13 +213,12 @@ export default {
             last: res.last
           }
 
-          console.log("pagination");
-          console.log(res.pageable);
-          console.log(this.pagination);
+          this.loading = false
+          return;
         })
         .catch((err) => {
-          console.log("Erro ao carregar usuários");
-          console.log(err);
+          console.log("errors");      
+          console.log(err);    
           messageService.error("Erro ao carregar usuários");
         });
     },
@@ -273,10 +291,20 @@ export default {
       console.log("retorno do query string");
       console.log(queryString);
 
-      usuarioService.search(this.pagination.pageNumber, this.pagination.pageSize, queryString)
+      usuarioService.getAll(this.pagination.pageNumber, this.pagination.pageSize, queryString)
         .then((res) => {
-          console.log(res);
-          this.usuarios = res
+          console.log(res.content);
+          this.usuarios = res.content;
+          this.filteredResults = this.users;
+
+          this.pagination = {
+            pageNumber: res.pageable.pageNumber,
+            pageSize: res.pageable.pageSize,
+            totalPages: res.totalPages,
+            totalElements: res.totalElements,
+            first: res.first,
+            last: res.last
+          }
         }).catch((err) => {
           console.log(err);
         });
@@ -287,6 +315,7 @@ export default {
         this.fetchUsuarios(this.pagination.pageNumber + 1);
       }
     },
+
     prevPage() {
       if (!this.pagination.first) {
         this.fetchUsuarios(this.pagination.pageNumber - 1);

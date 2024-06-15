@@ -1,6 +1,6 @@
 const usuarioService = {
-  getAll(page, size) {
-    return fetch(`http://localhost:8082/api/v1/usuarios?page=${page}&size=${size}`, {
+  getAll(page, size, queryString = '') {
+    return fetch(`http://localhost:8082/api/v1/usuarios?page=${page}&size=${size}&${queryString}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
