@@ -1,14 +1,22 @@
 <template>
   <div>
     <div class="row">
-      <div v-if="loading" class="d-flex justify-content-center">        
+      <div v-if="loading" class="d-flex justify-content-center">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
-        </div>      
+        </div>
       </div>
 
       <div class="col-12 col-xl-12">
-        <UsuarioSearch @search="applyFilters" />
+
+        <div v-if="!loading" class="d-flex gap-2">
+          <CardComponent :number="4" :message="'Total de usuários admin'" :icone="'fa-solid fa-user-tie'" />
+          <CardComponent :number="2978" :message="'Total de usuários colaboradores'" :icone="'fa-solid fa-users'" />
+          <CardComponent :number="1548" :message="'Total de clientes admin'" :icone="'fa-solid fa-users'" />
+          <CardComponent :number="1897" :message="'Total de clientes colaborador'" :icone="'fa-solid fa-users'" />
+        </div>        
+
+        <UsuarioSearch @search="applyFilters" ref="searchComponent" />
 
         <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
 
@@ -89,20 +97,23 @@
         <nav aria-label="Page navigation example">
           <ul class="pagination">
             <li class="page-item" :class="{ disabled: pagination.first }">
-              <a class="page-link" href="#" @click.prevent="fetchUsuarios(0)">First</a>
+              <a class="page-link" href="#"
+                @click.prevent="fetchUsuarios(0, this.$refs.searchComponent.filters)">Primeira</a>
             </li>
             <li class="page-item" :class="{ disabled: pagination.first }">
-              <a class="page-link" href="#" @click.prevent="prevPage">Previous</a>
+              <a class="page-link" href="#" @click.prevent="prevPage">Anterior</a>
             </li>
             <li class="page-item" v-for="page in visiblePages" :key="page"
               :class="{ active: page - 1 === pagination.pageNumber }">
-              <a class="page-link" href="#" @click.prevent="fetchUsuarios(page - 1)">{{ page }}</a>
+              <a class="page-link" href="#"
+                @click.prevent="fetchUsuarios((page - 1), this.$refs.searchComponent.filters)">{{ page }}</a>
             </li>
             <li class="page-item" :class="{ disabled: pagination.last }">
-              <a class="page-link" href="#" @click.prevent="nextPage">Next</a>
+              <a class="page-link" href="#" @click.prevent="nextPage">Próxima</a>
             </li>
             <li class="page-item" :class="{ disabled: pagination.last }">
-              <a class="page-link" href="#" @click.prevent="fetchUsuarios(pagination.totalPages - 1)">Last</a>
+              <a class="page-link" href="#"
+                @click.prevent="fetchUsuarios((pagination.totalPages - 1), this.$refs.searchComponent.filters)">Última</a>
             </li>
           </ul>
         </nav>
@@ -118,6 +129,7 @@ import messageService from "@/services/messageService";
 import usuarioService from "@/services/usuarioService";
 
 import UsuarioSearch from "@/views/usuarios/UsuarioSearch.vue";
+import CardComponent from "@/components/common/cards/CardComponent.vue"
 
 import {
   EditIcon,
@@ -136,7 +148,8 @@ export default {
     EyeIcon,
     UnlockIcon,
     LockIcon,
-    UsuarioSearch
+    UsuarioSearch,
+    CardComponent
   },
 
   data() {
@@ -196,22 +209,21 @@ export default {
   },
 
   methods: {
-    fetchUsuarios(page = 0) {
+    fetchUsuarios(page = 0, filters) {
+
+      console.log("fetchUsuarios - filters");
+      console.log(filters);
+
       this.loading = true;
+      const queryString = queryService.createQueryString(filters);
+
       usuarioService
-        .getAll(page, this.pagination.pageSize)
+        .getAll(page, this.pagination.pageSize, queryString)
         .then((res) => {
           this.usuarios = res.content;
           this.filteredResults = this.users;
 
-          this.pagination = {
-            pageNumber: res.pageable.pageNumber,
-            pageSize: res.pageable.pageSize,
-            totalPages: res.totalPages,
-            totalElements: res.totalElements,
-            first: res.first,
-            last: res.last
-          }
+          this.setDataPaginacao(res)
 
           this.loading = false
           return;
@@ -282,6 +294,17 @@ export default {
       }
     },
 
+    setDataPaginacao(res) {
+      this.pagination = {
+        pageNumber: res.pageable.pageNumber,
+        pageSize: res.pageable.pageSize,
+        totalPages: res.totalPages,
+        totalElements: res.totalElements,
+        first: res.first,
+        last: res.last
+      }
+    },
+
     applyFilters(filters) {
 
       this.loading = true;
@@ -289,27 +312,15 @@ export default {
 
       const queryString = queryService.createQueryString(filters);
 
-      console.log("retorno do query string");
-      console.log(queryString);
-
       usuarioService.getAll(this.pagination.pageNumber, this.pagination.pageSize, queryString)
         .then((res) => {
-          console.log(res.content);
           this.usuarios = res.content;
           this.filteredResults = this.users;
 
-          this.pagination = {
-            pageNumber: res.pageable.pageNumber,
-            pageSize: res.pageable.pageSize,
-            totalPages: res.totalPages,
-            totalElements: res.totalElements,
-            first: res.first,
-            last: res.last
-          }
+          this.setDataPaginacao(res)
 
           this.loading = false;
         }).catch((err) => {
-
           this.loading = false;
           console.log(err);
         });
@@ -317,15 +328,17 @@ export default {
 
     nextPage() {
       if (!this.pagination.last) {
-        this.fetchUsuarios(this.pagination.pageNumber + 1);
+        const next = this.pagination.pageNumber - 1;
+        this.fetchUsuarios(next, this.$refs.searchComponent.filters);
       }
     },
 
     prevPage() {
       if (!this.pagination.first) {
-        this.fetchUsuarios(this.pagination.pageNumber - 1);
+        const previous = this.pagination.pageNumber - 1;
+        this.fetchUsuarios(previous, this.$refs.searchComponent.filters);
       }
-    }
+    },
 
   },
 };
