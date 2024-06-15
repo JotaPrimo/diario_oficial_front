@@ -1,124 +1,121 @@
 <template>
-  <div>
-    <div class="row">
-      <div v-if="loading" class="d-flex justify-content-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
+  <div class="row">
+    <div v-if="loading" class="d-flex justify-content-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div v-if="!loading" class="d-flex">
+        <CardComponent :number="4" :message="'Total de usuários admin'" :icone="'fa-solid fa-user-tie'" />
+        <CardComponent :number="2978" :message="'Total de usuários colaboradores'" :icone="'fa-solid fa-users'" />
+        <CardComponent :number="1548" :message="'Total de clientes admin'" :icone="'fa-solid fa-users'" />
+        <CardComponent :number="1897" :message="'Total de clientes colaborador'" :icone="'fa-solid fa-users'" />
       </div>
 
-      <div class="col-12 col-xl-12">
+    <div class="col-12 col-xl-12">    
 
-        <div v-if="!loading" class="d-flex gap-2">
-          <CardComponent :number="4" :message="'Total de usuários admin'" :icone="'fa-solid fa-user-tie'" />
-          <CardComponent :number="2978" :message="'Total de usuários colaboradores'" :icone="'fa-solid fa-users'" />
-          <CardComponent :number="1548" :message="'Total de clientes admin'" :icone="'fa-solid fa-users'" />
-          <CardComponent :number="1897" :message="'Total de clientes colaborador'" :icone="'fa-solid fa-users'" />
-        </div>        
+      <UsuarioSearch @search="applyFilters" ref="searchComponent" />
 
-        <UsuarioSearch @search="applyFilters" ref="searchComponent" />
+      <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
 
-        <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
+      <div v-if="!loading" class="card">
+        <div class="card-header">
+          <h5 class="card-title">
+            {{ tituloPagina }}
+            {{ pagination }}
+            <select v-model="pagination.pageSize" @change="fetchUsuarios()">
+              <option value="10" selected>10</option>
+              <option value="20" selected>20</option>
+              <option value="50" selected>50</option>
+              <option value="100" selected>100</option>
+            </select>
+          </h5>
+          <div>
+            <h6 class="card-subtitle text-muted">
+              {{ descricaoPagina }}
+            </h6>
+            <div id="infos_datatable">
 
-        <div v-if="!loading" class="card">
-          <div class="card-header">
-            <h5 class="card-title">
-              {{ tituloPagina }}
-              {{ pagination }}
-              <select v-model="pagination.pageSize" @change="fetchUsuarios()">
-                <option value="10" selected>10</option>
-                <option value="20" selected>20</option>
-                <option value="50" selected>50</option>
-                <option value="100" selected>100</option>
-              </select>
-            </h5>
-            <div>
-              <h6 class="card-subtitle text-muted">
-                {{ descricaoPagina }}
-              </h6>
-              <div id="infos_datatable">
-
-                <div>
-                  <label for="totalRegistros" class="pt-2">
-                    Registro encontrados
-                    <span id="totalRegistros" class="badge text-bg-success fw-bold">
-                      {{ pagination.totalElements }}
-                    </span>
-                  </label>
-                </div>
-
+              <div>
+                <label for="totalRegistros" class="pt-2">
+                  Registro encontrados
+                  <span id="totalRegistros" class="badge text-bg-success fw-bold">
+                    {{ pagination.totalElements }}
+                  </span>
+                </label>
               </div>
+
             </div>
           </div>
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th style="width: 5%">#ID</th>
-                <th style="width: 20%">Username</th>
-                <th style="width: 25%">Email</th>
-                <th style="width: 5%" class="text-center">Status</th>
-                <th style="width: 15%">Role</th>
-                <th style="width: 8%">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(usuario, index) in usuarios" :key="index">
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.username }}</td>
-                <td>{{ usuario.email }}</td>
-                <td class="text-center">
-                  <span class="badge" :class="{
-                    'text-bg-success': checkIsAtivo(usuario),
-                    'text-bg-secondary': !checkIsAtivo(usuario),
-                  }">
-                    {{ usuario.statusUsuario }}
-                  </span>
-                </td>
-                <td class="d-none d-md-table-cell">{{ usuario.role }}</td>
-                <td class="text-center">
-                  <EyeIcon />
-
-                  <UnlockIcon class="clickable" v-if="!checkIsAtivo(usuario)" @click="ativarUsuario(usuario)" />
-
-                  <LockIcon class="clickable" v-if="checkIsAtivo(usuario)" @click="inativarUsuario(usuario)" />
-
-                  <router-link title="Clique aqui para editar"
-                    :to="{ name: 'UsuariosEdit', params: { id: usuario.id } }">
-                    <EditIcon />
-                  </router-link>
-
-                  <TrashIcon class="clickable" @click="deleteUsuario(usuario.id)" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
         </div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th style="width: 5%">#ID</th>
+              <th style="width: 20%">Username</th>
+              <th style="width: 25%">Email</th>
+              <th style="width: 5%" class="text-center">Status</th>
+              <th style="width: 15%">Role</th>
+              <th style="width: 8%">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(usuario, index) in usuarios" :key="index">
+              <td>{{ usuario.id }}</td>
+              <td>{{ usuario.username }}</td>
+              <td>{{ usuario.email }}</td>
+              <td class="text-center">
+                <span class="badge" :class="{
+                  'text-bg-success': checkIsAtivo(usuario),
+                  'text-bg-secondary': !checkIsAtivo(usuario),
+                }">
+                  {{ usuario.statusUsuario }}
+                </span>
+              </td>
+              <td class="d-none d-md-table-cell">{{ usuario.role }}</td>
+              <td class="text-center">
+                <EyeIcon />
 
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item" :class="{ disabled: pagination.first }">
-              <a class="page-link" href="#"
-                @click.prevent="fetchUsuarios(0, this.$refs.searchComponent.filters)">Primeira</a>
-            </li>
-            <li class="page-item" :class="{ disabled: pagination.first }">
-              <a class="page-link" href="#" @click.prevent="prevPage">Anterior</a>
-            </li>
-            <li class="page-item" v-for="page in visiblePages" :key="page"
-              :class="{ active: page - 1 === pagination.pageNumber }">
-              <a class="page-link" href="#"
-                @click.prevent="fetchUsuarios((page - 1), this.$refs.searchComponent.filters)">{{ page }}</a>
-            </li>
-            <li class="page-item" :class="{ disabled: pagination.last }">
-              <a class="page-link" href="#" @click.prevent="nextPage">Próxima</a>
-            </li>
-            <li class="page-item" :class="{ disabled: pagination.last }">
-              <a class="page-link" href="#"
-                @click.prevent="fetchUsuarios((pagination.totalPages - 1), this.$refs.searchComponent.filters)">Última</a>
-            </li>
-          </ul>
-        </nav>
+                <UnlockIcon class="clickable" v-if="!checkIsAtivo(usuario)" @click="ativarUsuario(usuario)" />
 
+                <LockIcon class="clickable" v-if="checkIsAtivo(usuario)" @click="inativarUsuario(usuario)" />
+
+                <router-link title="Clique aqui para editar" :to="{ name: 'UsuariosEdit', params: { id: usuario.id } }">
+                  <EditIcon />
+                </router-link>
+
+                <TrashIcon class="clickable" @click="deleteUsuario(usuario.id)" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" :class="{ disabled: pagination.first }">
+            <a class="page-link" href="#"
+              @click.prevent="fetchUsuarios(0, this.$refs.searchComponent.filters)">Primeira</a>
+          </li>
+          <li class="page-item" :class="{ disabled: pagination.first }">
+            <a class="page-link" href="#" @click.prevent="prevPage">Anterior</a>
+          </li>
+          <li class="page-item" v-for="page in visiblePages" :key="page"
+            :class="{ active: page - 1 === pagination.pageNumber }">
+            <a class="page-link" href="#"
+              @click.prevent="fetchUsuarios((page - 1), this.$refs.searchComponent.filters)">{{ page }}</a>
+          </li>
+          <li class="page-item" :class="{ disabled: pagination.last }">
+            <a class="page-link" href="#" @click.prevent="nextPage">Próxima</a>
+          </li>
+          <li class="page-item" :class="{ disabled: pagination.last }">
+            <a class="page-link" href="#"
+              @click.prevent="fetchUsuarios((pagination.totalPages - 1), this.$refs.searchComponent.filters)">Última</a>
+          </li>
+        </ul>
+      </nav>
+
     </div>
   </div>
 </template>
