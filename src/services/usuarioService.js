@@ -1,6 +1,28 @@
 const usuarioService = {
-  getAll(queryString) {
-    return fetch(`http://localhost:8082/api/v1/usuarios?${queryString}`, {
+  getAll(page, size) {
+    return fetch(`http://localhost:8082/api/v1/usuarios?page=${page}&size=${size}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao carregar os dados");
+        }
+        return response.json();
+      })
+      .then((data) => {        
+        return data;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  },
+
+  search(page, size, queryString = '') {
+    return fetch(`http://localhost:8082/api/v1/usuarios?page=${page}&page=${size}&${queryString}&`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

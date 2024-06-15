@@ -3,10 +3,21 @@
     <div class="row">
       <div class="col-12 col-xl-12">
         <UsuarioSearch @search="applyFilters" />
+
         <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
+
         <div class="card">
           <div class="card-header">
-            <h5 class="card-title">{{ tituloPagina }}</h5>
+            <h5 class="card-title">
+              {{ tituloPagina }}
+              {{ pagination }}
+              <select v-model="pagination.pageSize" @change="fetchUsuarios()">
+                  <option value="10" selected>10</option>
+                  <option value="20" selected>20</option>
+                  <option value="50" selected>50</option>
+                  <option value="100" selected>100</option>
+                </select>
+            </h5>
             <h6 class="card-subtitle text-muted">
               {{ descricaoPagina }}
             </h6>
@@ -54,6 +65,28 @@
             </tbody>
           </table>
         </div>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: pagination.first }">
+              <a class="page-link" href="#" @click.prevent="fetchUsuarios(0)">First</a>
+            </li>
+            <li class="page-item" :class="{ disabled: pagination.first }">
+              <a class="page-link" href="#" @click.prevent="prevPage">Previous</a>
+            </li>
+            <li class="page-item" v-for="page in visiblePages" :key="page"
+              :class="{ active: page - 1 === pagination.pageNumber }">
+              <a class="page-link" href="#" @click.prevent="fetchUsuarios(page - 1)">{{ page }}</a>
+            </li>
+            <li class="page-item" :class="{ disabled: pagination.last }">
+              <a class="page-link" href="#" @click.prevent="nextPage">Next</a>
+            </li>
+            <li class="page-item" :class="{ disabled: pagination.last }">
+              <a class="page-link" href="#" @click.prevent="fetchUsuarios(pagination.totalPages - 1)">Last</a>
+            </li>
+          </ul>
+        </nav>
+
       </div>
     </div>
   </div>
@@ -93,6 +126,14 @@ export default {
       hasSearched: false,
       tituloPagina: "Usuários",
       descricaoPagina: "Recurso para gerênciamento de usuários",
+      pagination: {
+        pageNumber: 0,
+        pageSize: 10,
+        totalPages: 0,
+        totalElements: 0,
+        first: true,
+        last: false
+      }
     };
   },
 
@@ -100,15 +141,66 @@ export default {
     this.fetchUsuarios();
   },
 
+  computed: {
+    totalPagesArray() {
+      return Array.from({ length: this.pagination.totalPages }, (v, k) => k + 1);
+    },
+
+    visiblePages() {
+      const { pageNumber, totalPages } = this.pagination;
+      const delta = 2;
+      const range = [];
+      const start = Math.max(2, pageNumber - delta);
+      const end = Math.min(totalPages - 1, pageNumber + delta + 1);
+
+      if (start > 2) {
+        range.push("...");
+      }
+
+      for (let i = start; i < end; i++) {
+        range.push(i);
+      }
+
+      if (end < totalPages - 1) {
+        range.push("...");
+      }
+
+      if (totalPages > 1) {
+        range.unshift(1);
+        range.push(totalPages);
+      }
+
+      return range;
+    }
+  },
+
   methods: {
-    fetchUsuarios() {
+    fetchUsuarios(page = 0) {
+      console.log("fetchUsuarios page");
+      console.log(page);
+
       usuarioService
-        .getAll()
-        .then((data) => {
-          this.usuarios = data.sort((atual, proximo) => atual.id - proximo.id);
+        .getAll(page, this.pagination.pageSize)
+        .then((res) => {
+          this.usuarios = res.content;
           this.filteredResults = this.users;
+
+          this.pagination = {
+            pageNumber: res.pageable.pageNumber,
+            pageSize: res.pageable.pageSize,
+            totalPages: res.totalPages,
+            totalElements: res.totalElements,
+            first: res.first,
+            last: res.last
+          }
+
+          console.log("pagination");
+          console.log(res.pageable);
+          console.log(this.pagination);
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log("Erro ao carregar usuários");
+          console.log(err);
           messageService.error("Erro ao carregar usuários");
         });
     },
@@ -173,15 +265,32 @@ export default {
     },
 
     applyFilters(filters) {
-      console.log("applyFilters aqui");
+
       this.hasSearched = true;
-      console.log(filters);  
 
       const queryString = queryService.createQueryString(filters);
 
-      usuarioService.getAll(queryString).then((res) => {
-        console.log(res);
-      }).catch();
+      console.log("retorno do query string");
+      console.log(queryString);
+
+      usuarioService.search(this.pagination.pageNumber, this.pagination.pageSize, queryString)
+        .then((res) => {
+          console.log(res);
+          this.usuarios = res
+        }).catch((err) => {
+          console.log(err);
+        });
+    },
+
+    nextPage() {
+      if (!this.pagination.last) {
+        this.fetchUsuarios(this.pagination.pageNumber + 1);
+      }
+    },
+    prevPage() {
+      if (!this.pagination.first) {
+        this.fetchUsuarios(this.pagination.pageNumber - 1);
+      }
     }
 
   },

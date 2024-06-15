@@ -1,20 +1,25 @@
 const queryService = {
   createQueryString(params) {
     const queryString = new URLSearchParams();
-    const hasOwnProperty = Object.prototype.hasOwnProperty;
 
     for (const key in params) {
-      if (hasOwnProperty(key)) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
         const value = params[key];
         if (Array.isArray(value)) {
           // Se o valor for um array, adicione cada item individualmente
-          value.forEach((item) => queryString.append(key, item));
-        } else if (value !== undefined && value !== null) {
-          // Adicione apenas se o valor não for indefinido ou nulo
+          value.forEach(item => {
+            if (item !== undefined && item !== null && item !== '') {
+              queryString.append(key, item);
+            }
+          });
+        } else if (value !== undefined && value !== null && value !== '') {
+          // Adicione apenas se o valor não for indefinido, nulo ou vazio
           queryString.append(key, value);
         }
       }
     }
+  
+    return queryString.toString();
   },
 };
 
