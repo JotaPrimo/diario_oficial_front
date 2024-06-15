@@ -1,12 +1,12 @@
 <template>
     <div class="col-12 col-sm-6 col-xxl-3 d-flex">
-        <div class="card" :class="classeCard">
+        <div class="card " :class="classeCard">
             <div class="card-body py-4">
                 <div class="d-flex align-items-start">
                     <div class="flex-grow-1">
                         <h3 class="mb-2">{{ number }}</h3>
                         <p class="mb-2">{{ title }}</p>
-                        <div class="mb-0">
+                        <div class="mb-2">
                             <span class="text-muted">{{ message }}</span>
                         </div>
                     </div>
