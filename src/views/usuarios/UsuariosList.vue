@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="row">
-      <div v-if="loading" class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+      <div v-if="loading" class="d-flex justify-content-center">        
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>      
       </div>
-    </div>
 
-      <div v-else class="col-12 col-xl-12">
+      <div class="col-12 col-xl-12">
         <UsuarioSearch @search="applyFilters" />
 
         <router-link class="btn btn-sm btn-primary mb-2" to="/usuarios/create">Novo</router-link>
 
-        <div class="card">
+        <div v-if="!loading" class="card">
           <div class="card-header">
             <h5 class="card-title">
               {{ tituloPagina }}
@@ -29,16 +29,16 @@
                 {{ descricaoPagina }}
               </h6>
               <div id="infos_datatable">
-                
+
                 <div>
                   <label for="totalRegistros" class="pt-2">
-                  Registro encontrados
-                  <span id="totalRegistros" class="badge text-bg-success fw-bold"> 
-                    {{ pagination.totalElements }}
-                  </span>
-                </label>
+                    Registro encontrados
+                    <span id="totalRegistros" class="badge text-bg-success fw-bold">
+                      {{ pagination.totalElements }}
+                    </span>
+                  </label>
                 </div>
-                
+
               </div>
             </div>
           </div>
@@ -196,7 +196,7 @@ export default {
   },
 
   methods: {
-    fetchUsuarios(page = 0) {    
+    fetchUsuarios(page = 0) {
       this.loading = true;
       usuarioService
         .getAll(page, this.pagination.pageSize)
@@ -217,8 +217,8 @@ export default {
           return;
         })
         .catch((err) => {
-          console.log("errors");      
-          console.log(err);    
+          console.log("errors");
+          console.log(err);
           messageService.error("Erro ao carregar usuários");
         });
     },
@@ -284,6 +284,7 @@ export default {
 
     applyFilters(filters) {
 
+      this.loading = true;
       this.hasSearched = true;
 
       const queryString = queryService.createQueryString(filters);
@@ -305,7 +306,11 @@ export default {
             first: res.first,
             last: res.last
           }
+
+          this.loading = false;
         }).catch((err) => {
+
+          this.loading = false;
           console.log(err);
         });
     },
